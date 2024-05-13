@@ -2,17 +2,15 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import { UserModel } from "./module/user";
+require("dotenv").config();
 
 const port = 3000;
 const app = express();
-const mongooseConnect = process.env.MONGOOSE;
+const mongooseConnect = process.env.MONGOOSE || "";
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(
-  "mongodb+srv://adcodes:Darasimi10@spinner.crj4kzv.mongodb.net/main?retryWrites=true&w=majority"
-);
-console.log(mongooseConnect, "hello");
+mongoose.connect(mongooseConnect);
 
 app.get("/users", (req: Request, res: Response) => {
   UserModel.find({})
