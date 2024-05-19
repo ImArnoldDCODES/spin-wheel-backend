@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import errorHandler from "./middleware/errorHandler";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { CustomJwtPayload } from "./types/moduleTypes";
 import { UserModal } from "./module/user";
 require("dotenv").config();
 
@@ -43,6 +44,22 @@ app.post("/login", async (req: Request, res: Response) => {
       expiresIn: "1h",
     });
     res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get("/profile", async (req: Request, res: Response) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "No token, authorization denied" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret) as CustomJwtPayload;
+    const user = await UserModal.findById(decoded.id).select("-password");
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
