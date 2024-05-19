@@ -1,28 +1,33 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
-import { UserModel } from "./module/user";
+import errorHandler from "./middleware/errorHandler";
+import { UserModal } from "./module/user";
 require("dotenv").config();
 
-const port = 3000;
+const port = 5000;
 const app = express();
 const mongooseConnect = process.env.MONGOOSE || "";
+mongoose.connect(mongooseConnect);
+
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(mongooseConnect);
 
-app.get("/users", (req: Request, res: Response) => {
-  UserModel.find({})
-    .then((users) => {
-      res.json(users);
-    })
-    .catch((err) => {
-      console.log("error", err);
-      res.status(500).json({ error: err.message });
-    });
+app.post("/register", async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const user = new UserModal({ name, email, password });
+    await user.save();
+    res.status(200).json({ message: "User Registered Successfully" });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
 });
 
+app.use(errorHandler);
+
 app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

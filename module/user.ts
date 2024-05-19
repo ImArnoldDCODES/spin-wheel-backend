@@ -1,11 +1,17 @@
-import mongoose, { Schema } from "mongoose";
-import { IUser } from "../types/moduleTypes";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
-const UserSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  age: { type: String, required: true },
-  height: { type: String, require: true },
-  lastname: { type: String, require: true },
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
 });
 
-export const UserModel = mongoose.model<IUser>("user", UserSchema);
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+export const UserModal = mongoose.model("User", UserSchema);
