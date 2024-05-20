@@ -92,7 +92,7 @@ app.post("/wheel", async (req: Request, res: Response) => {
   }
 });
 
-app.post("winner", async (req: Request, res: Response) => {
+app.post("/winner", async (req: Request, res: Response) => {
   const { name, prize, giveawayId } = req.body;
 
   try {
