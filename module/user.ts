@@ -5,6 +5,19 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  giveaways: [
+    {
+      title: { type: String, required: true },
+      date: { type: Date, required: true },
+      winners: [
+        {
+          name: { type: String, required: true },
+          prize: { type: String, required: true },
+        },
+      ],
+      items: [{ type: String, required: true }],
+    },
+  ],
 });
 
 UserSchema.pre("save", async function (next) {
