@@ -85,7 +85,12 @@ app.post("/wheel", async (req: Request, res: Response) => {
     user.giveaways.push(newGiveaway);
     await user.save();
 
-    res.status(200).json({ message: "Giveaway added successfully", user });
+    const createdGiveaway = user.giveaways[user.giveaways.length - 1];
+
+    res.status(200).json({
+      message: "Giveaway added successfully",
+      giveawayId: createdGiveaway._id,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: (error as Error).message });
@@ -110,7 +115,7 @@ app.post("/winner", async (req: Request, res: Response) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Winner added successfully", user });
+    res.status(200).json({ message: "Winner added successfully" });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
