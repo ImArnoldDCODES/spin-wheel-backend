@@ -6,10 +6,10 @@ import mongoose from "mongoose";
 import errorHandler from "../middleware/errorHandler";
 import { UserModal } from "../module/user";
 import { CustomJwtPayload } from "../types/moduleTypes";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 const app = express();
 const mongooseConnect = process.env.MONGOOSE || "";
 mongoose.connect(mongooseConnect);
