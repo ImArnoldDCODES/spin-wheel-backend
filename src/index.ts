@@ -3,10 +3,11 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import errorHandler from "./middleware/errorHandler";
-import { UserModal } from "./module/user";
-import { CustomJwtPayload } from "./types/moduleTypes";
-require("dotenv").config();
+import errorHandler from "../middleware/errorHandler";
+import { UserModal } from "../module/user";
+import { CustomJwtPayload } from "../types/moduleTypes";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const port = 5000;
 const app = express();
