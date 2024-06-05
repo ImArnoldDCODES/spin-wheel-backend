@@ -101,9 +101,16 @@ app.post("/wheel", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/items", (req: Request, res: Response) => {
-  if (giveawayList) {
-    res.status(200).json({ giveawayList });
+app.get("/giveaways", async (req: Request, res: Response) => {
+  try {
+    const user = await UserModal.findOne({ _id: publicId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user.giveaways)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: (error as Error).message });
   }
 });
 
