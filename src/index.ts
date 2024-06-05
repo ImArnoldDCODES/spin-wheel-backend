@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import errorHandler from "../middleware/errorHandler";
 import { UserModal } from "../module/user";
 import { CustomJwtPayload } from "../types/moduleTypes";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 const port = 5000;
@@ -15,6 +15,7 @@ const mongooseConnect = process.env.MONGOOSE || "";
 mongoose.connect(mongooseConnect);
 const jwtSecret = process.env.JWT_SECRET || "default_secret_key";
 let publicId: string;
+let giveawayList: Array<string>;
 
 app.use(express.json());
 app.use(cors());
@@ -61,7 +62,7 @@ app.get("/profile", async (req: Request, res: Response) => {
     const decoded = jwt.verify(token, jwtSecret) as CustomJwtPayload;
     const user = await UserModal.findById(decoded.id).select("-password");
     publicId = decoded.id;
-    res.json(user);
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
@@ -85,6 +86,8 @@ app.post("/wheel", async (req: Request, res: Response) => {
 
     user.giveaways.push(newGiveaway);
     await user.save();
+    giveawayList = newGiveaway.items;
+    console.log(giveawayList, "list1");
 
     const createdGiveaway = user.giveaways[user.giveaways.length - 1];
 
@@ -95,6 +98,12 @@ app.post("/wheel", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get("/items", (req: Request, res: Response) => {
+  if (giveawayList) {
+    res.status(200).json({ giveawayList });
   }
 });
 
@@ -127,3 +136,8 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+// {
+//   "title": "hello",
+//   "items": ["5k", "10k", "20k"]
+// }
