@@ -17,8 +17,13 @@ const jwtSecret = process.env.JWT_SECRET || "default_secret_key";
 let publicId: string;
 let giveawayList: Array<string>;
 
+const corsConfig = {
+  origin: 'https://spin-wheel-frontend.brimble.app',
+  credentials: true,
+};
+
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsConfig));
 
 app.post("/register", async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
