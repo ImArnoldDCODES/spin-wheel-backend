@@ -18,7 +18,7 @@ let publicId: string;
 let giveawayList: Array<string>;
 
 const corsConfig = {
-  origin: 'https://spin-wheel-frontend.brimble.app',
+  origin: ['https://spin-wheel-frontend.brimble.app', "http://localhost:3000/"],
   credentials: true,
 };
 
