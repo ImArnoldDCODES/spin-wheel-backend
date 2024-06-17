@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -17,8 +17,19 @@ const jwtSecret = process.env.JWT_SECRET || "default_secret_key";
 let publicId: string;
 let giveawayList: Array<string>;
 
-const corsConfig = {
-  origin: ['https://spin-wheel-frontend.brimble.app', "http://localhost:3000/"],
+const corsConfig: CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    const allowedOrigins = [
+      'https://spin-wheel-frontend.brimble.app',
+      'http://localhost:3000',
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
 
